@@ -371,7 +371,7 @@ export default function BuyerDashboard() {
             )}
 
             <div className="space-y-4">
-              {listings.length === 0 ? (
+              {materials.length === 0 ? (
                 <Card>
                   <CardContent className="p-6 text-center">
                     <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -380,13 +380,16 @@ export default function BuyerDashboard() {
                   </CardContent>
                 </Card>
               ) : (
-                listings.map((listing) => (
-                  <Card key={listing.id}>
+                materials.map((material) => (
+                  <Card key={material._id}>
                     <CardHeader>
                       <div className="flex justify-between items-start">
-                        <CardTitle className="text-lg">{listing.material}</CardTitle>
+                        <div>
+                          <CardTitle className="text-lg">{material.name}</CardTitle>
+                          <p className="text-sm text-gray-600">{material.category}</p>
+                        </div>
                         <button
-                          onClick={() => handleDeleteListing(listing.id)}
+                          onClick={() => handleDeleteListing(material._id)}
                           className="text-red-600 hover:text-red-800"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -395,21 +398,31 @@ export default function BuyerDashboard() {
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
+                        {material.description && (
+                          <p className="text-sm text-gray-600">{material.description}</p>
+                        )}
                         <div className="flex justify-between">
-                          <span className="text-sm text-gray-600">Price per kg:</span>
-                          <span className="font-medium">₹{listing.pricePerKg}</span>
+                          <span className="text-sm text-gray-600">Price per {material.unit}:</span>
+                          <span className="font-medium">₹{material.pricePerKg}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-sm text-gray-600">Available:</span>
-                          <span className="font-medium">{listing.availableQuantity} kg</span>
+                          <span className="font-medium">{material.availableQuantity} {material.unit}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-gray-600">Delivery Area:</span>
-                          <span className="font-medium">{listing.deliveryArea}</span>
+                          <span className="text-sm text-gray-600">Min Order:</span>
+                          <span className="font-medium">{material.minOrderQuantity} {material.unit}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">
+                            <MapPin className="inline h-4 w-4 mr-1" />
+                            Delivery Area:
+                          </span>
+                          <span className="font-medium">{material.deliveryArea}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-sm text-gray-600">Listed:</span>
-                          <span className="font-medium">{new Date(listing.createdAt).toLocaleDateString()}</span>
+                          <span className="font-medium">{new Date(material.createdAt).toLocaleDateString()}</span>
                         </div>
                       </div>
                     </CardContent>
