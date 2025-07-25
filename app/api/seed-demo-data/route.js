@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { connectDB } from '../../../lib/db';
+import connectDB from '../../../lib/db';
 import User from '../../../models/user';
 import Material from '../../../models/material';
 import GroupOrder from '../../../models/groupOrder';
