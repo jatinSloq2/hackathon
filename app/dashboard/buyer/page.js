@@ -195,13 +195,13 @@ export default function BuyerDashboard() {
               <div className="flex items-center">
                 <Package className="h-8 w-8 text-blue-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Active Listings</p>
-                  <p className="text-2xl font-bold text-gray-900">{listings.length}</p>
+                  <p className="text-sm font-medium text-gray-600">Active Materials</p>
+                  <p className="text-2xl font-bold text-gray-900">{materials.length}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center">
@@ -213,26 +213,26 @@ export default function BuyerDashboard() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center">
                 <CheckCircle className="h-8 w-8 text-green-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Accepted Orders</p>
-                  <p className="text-2xl font-bold text-gray-900">{acceptedOrders.length}</p>
+                  <p className="text-sm font-medium text-gray-600">Confirmed Orders</p>
+                  <p className="text-2xl font-bold text-gray-900">{confirmedOrders.length}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center">
                 <Users className="h-8 w-8 text-purple-600" />
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Total Orders</p>
-                  <p className="text-2xl font-bold text-gray-900">{vendorGroupOrders.length}</p>
+                  <p className="text-2xl font-bold text-gray-900">{totalOrders}</p>
                 </div>
               </div>
             </CardContent>
