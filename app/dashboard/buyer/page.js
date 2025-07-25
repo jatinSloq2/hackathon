@@ -258,42 +258,107 @@ export default function BuyerDashboard() {
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <Input
-                      label="Material"
-                      name="material"
+                      label="Material Name"
+                      name="name"
                       placeholder="e.g., Tomatoes, Cooking Oil, Wheat Flour"
-                      value={formData.material}
+                      value={formData.name}
                       onChange={handleChange}
                       required
                     />
                     <Input
-                      label="Price per Kg (₹)"
-                      name="pricePerKg"
-                      type="number"
-                      value={formData.pricePerKg}
+                      label="Description"
+                      name="description"
+                      placeholder="Brief description of the material"
+                      value={formData.description}
                       onChange={handleChange}
-                      required
                     />
-                    <Input
-                      label="Available Quantity (kg)"
-                      name="availableQuantity"
-                      type="number"
-                      value={formData.availableQuantity}
-                      onChange={handleChange}
-                      required
-                    />
-                    <Input
-                      label="Delivery Area"
-                      name="deliveryArea"
-                      placeholder="e.g., Mumbai Central, Andheri"
-                      value={formData.deliveryArea}
-                      onChange={handleChange}
-                      required
-                    />
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Category
+                      </label>
+                      <select
+                        name="category"
+                        value={formData.category}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="food">Food</option>
+                        <option value="construction">Construction</option>
+                        <option value="agricultural">Agricultural</option>
+                        <option value="industrial">Industrial</option>
+                        <option value="textiles">Textiles</option>
+                        <option value="chemicals">Chemicals</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <Input
+                        label="Price per Unit (₹)"
+                        name="pricePerKg"
+                        type="number"
+                        step="0.01"
+                        value={formData.pricePerKg}
+                        onChange={handleChange}
+                        required
+                      />
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Unit
+                        </label>
+                        <select
+                          name="unit"
+                          value={formData.unit}
+                          onChange={handleChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="kg">Kg</option>
+                          <option value="liter">Liter</option>
+                          <option value="piece">Piece</option>
+                          <option value="meter">Meter</option>
+                          <option value="ton">Ton</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <Input
+                        label="Available Quantity"
+                        name="availableQuantity"
+                        type="number"
+                        value={formData.availableQuantity}
+                        onChange={handleChange}
+                        required
+                      />
+                      <Input
+                        label="Min Order Quantity"
+                        name="minOrderQuantity"
+                        type="number"
+                        value={formData.minOrderQuantity}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <Input
+                        label="Delivery Area"
+                        name="deliveryArea"
+                        placeholder="e.g., Mumbai Central, Andheri"
+                        value={formData.deliveryArea}
+                        onChange={handleChange}
+                        required
+                      />
+                      <Input
+                        label="Delivery Radius (km)"
+                        name="deliveryRadius"
+                        type="number"
+                        value={formData.deliveryRadius}
+                        onChange={handleChange}
+                      />
+                    </div>
                     <div className="flex space-x-2">
-                      <Button type="submit" className="flex-1">Add Listing</Button>
-                      <Button 
-                        type="button" 
-                        variant="outline" 
+                      <Button type="submit" className="flex-1">Add Material</Button>
+                      <Button
+                        type="button"
+                        variant="outline"
                         onClick={() => setShowAddForm(false)}
                         className="flex-1"
                       >
