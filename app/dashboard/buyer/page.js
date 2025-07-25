@@ -6,42 +6,26 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Button } from '../../../components/Button';
 import { Input } from '../../../components/Input';
-import { Package, Users, Clock, CheckCircle, Plus, Edit, Trash2 } from 'lucide-react';
+import { Package, Users, Clock, CheckCircle, Plus, Edit, Trash2, Calendar, MapPin } from 'lucide-react';
 
 export default function BuyerDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [listings, setListings] = useState([]);
+  const [materials, setMaterials] = useState([]);
   const [groupOrders, setGroupOrders] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    material: '',
+    name: '',
+    description: '',
+    category: 'food',
     pricePerKg: '',
     availableQuantity: '',
-    deliveryArea: ''
+    minOrderQuantity: '',
+    unit: 'kg',
+    deliveryArea: '',
+    deliveryRadius: '50'
   });
-
-  // Dummy data for group orders from vendors
-  const vendorGroupOrders = [
-    {
-      id: 1,
-      material: 'Tomatoes',
-      requestedBy: 'Vendor Group Mumbai',
-      quantity: '500 kg',
-      participants: 12,
-      status: 'pending',
-      submittedAt: '2024-01-18'
-    },
-    {
-      id: 2,
-      material: 'Cooking Oil',
-      requestedBy: 'Restaurant Vendors Alliance',
-      quantity: '200 liters',
-      participants: 8,
-      status: 'pending',
-      submittedAt: '2024-01-19'
-    }
-  ];
 
   useEffect(() => {
     if (status === 'loading') return;
