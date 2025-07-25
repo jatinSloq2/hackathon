@@ -163,7 +163,7 @@ export default function BuyerDashboard() {
     }
   };
 
-  if (status === 'loading') {
+  if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">Loading...</div>
@@ -175,8 +175,9 @@ export default function BuyerDashboard() {
     return null;
   }
 
-  const pendingOrders = vendorGroupOrders.filter(order => order.status === 'pending');
-  const acceptedOrders = vendorGroupOrders.filter(order => order.status === 'accepted');
+  const pendingOrders = groupOrders.filter(order => !order.supplierConfirmed);
+  const confirmedOrders = groupOrders.filter(order => order.supplierConfirmed);
+  const totalOrders = groupOrders.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
