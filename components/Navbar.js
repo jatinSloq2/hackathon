@@ -44,6 +44,14 @@ export function Navbar() {
                   <Home className="h-4 w-4" />
                   <span>Dashboard</span>
                 </Link>
+
+                <Link
+                  href="/tracking"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors"
+                >
+                  <Package className="h-4 w-4" />
+                  <span>Tracking</span>
+                </Link>
                 
                 <DropdownMenu>
                   <DropdownMenuTrigger className="focus:outline-none">
