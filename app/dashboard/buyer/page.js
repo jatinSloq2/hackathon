@@ -434,61 +434,101 @@ export default function BuyerDashboard() {
 
           {/* Group Orders from Vendors */}
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Group Orders from Vendors</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Group Orders for Your Materials</h2>
             <div className="space-y-4">
-              {vendorGroupOrders.length === 0 ? (
+              {groupOrders.length === 0 ? (
                 <Card>
                   <CardContent className="p-6 text-center">
                     <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-600">No group orders yet</p>
-                    <p className="text-sm text-gray-500 mt-2">Vendors will place group orders for your listed materials</p>
+                    <p className="text-sm text-gray-500 mt-2">Vendors will create group orders for your listed materials</p>
                   </CardContent>
                 </Card>
               ) : (
-                vendorGroupOrders.map((order) => (
-                  <Card key={order.id}>
+                groupOrders.map((order) => (
+                  <Card key={order._id}>
                     <CardHeader>
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-lg">{order.material}</CardTitle>
-                          <p className="text-sm text-gray-600">{order.requestedBy}</p>
+                          <CardTitle className="text-lg">{order.title}</CardTitle>
+                          <p className="text-sm text-gray-600">
+                            {order.material.name} • Organized by {order.organizer.businessName}
+                          </p>
                         </div>
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          order.status === 'pending' 
+                          !order.supplierConfirmed
                             ? 'bg-yellow-100 text-yellow-800'
-                            : order.status === 'accepted'
+                            : order.status === 'closed'
                             ? 'bg-blue-100 text-blue-800'
-                            : 'bg-green-100 text-green-800'
+                            : order.status === 'fulfilled'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-gray-100 text-gray-800'
                         }`}>
-                          {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                          {!order.supplierConfirmed ? 'Pending Confirmation' : order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                         </span>
                       </div>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-3">
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Quantity:</span>
-                          <span className="font-medium">{order.quantity}</span>
+                          <span className="text-sm text-gray-600">Target Quantity:</span>
+                          <span className="font-medium">{order.targetQuantity} {order.material.unit}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Current Quantity:</span>
+                          <span className="font-medium">{order.currentQuantity} {order.material.unit}</span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-600">Participants:</span>
-                          <span className="font-medium">{order.participants} vendors</span>
+                          <span className="font-medium">{order.participants.length} vendors</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Submitted:</span>
-                          <span className="font-medium">{new Date(order.submittedAt).toLocaleDateString()}</span>
+                          <span className="text-sm text-gray-600">Total Amount:</span>
+                          <span className="font-medium">₹{order.totalAmount}</span>
                         </div>
-                        
-                        {order.status === 'pending' && (
-                          <Button onClick={() => handleAcceptOrder(order.id)} className="w-full mt-4">
-                            Accept Order
-                          </Button>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">
+                            <MapPin className="inline h-4 w-4 mr-1" />
+                            Delivery:
+                          </span>
+                          <span className="font-medium">{order.deliveryLocation}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">
+                            <Calendar className="inline h-4 w-4 mr-1" />
+                            Deadline:
+                          </span>
+                          <span className="font-medium">
+                            {new Date(order.deadlineDate).toLocaleDateString()}
+                          </span>
+                        </div>
+
+                        {!order.supplierConfirmed && (
+                          <div className="mt-4 space-y-2">
+                            <input
+                              type="date"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Delivery Date"
+                              id={`delivery-date-${order._id}`}
+                            />
+                            <Button
+                              onClick={() => {
+                                const deliveryDate = document.getElementById(`delivery-date-${order._id}`).value;
+                                handleConfirmOrder(order._id, deliveryDate);
+                              }}
+                              className="w-full"
+                            >
+                              Confirm Order
+                            </Button>
+                          </div>
                         )}
-                        
-                        {order.status === 'accepted' && (
-                          <Button onClick={() => handleFulfillOrder(order.id)} className="w-full mt-4" variant="outline">
-                            Mark as Fulfilled
-                          </Button>
+
+                        {order.supplierConfirmed && order.deliveryDate && (
+                          <div className="mt-4 p-3 bg-green-50 rounded-md">
+                            <p className="text-sm text-green-800 font-medium">
+                              Order confirmed for delivery on {new Date(order.deliveryDate).toLocaleDateString()}
+                            </p>
+                          </div>
                         )}
                       </div>
                     </CardContent>
