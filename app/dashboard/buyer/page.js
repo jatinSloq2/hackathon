@@ -140,20 +140,27 @@ export default function BuyerDashboard() {
     }
   };
 
-  const handleAcceptOrder = (orderId) => {
-    const updatedOrders = vendorGroupOrders.map(order => 
-      order.id === orderId ? { ...order, status: 'accepted' } : order
-    );
-    setGroupOrders(updatedOrders);
-    localStorage.setItem('groupOrders', JSON.stringify(updatedOrders));
-  };
+  const handleConfirmOrder = async (orderId, deliveryDate) => {
+    try {
+      const response = await fetch(`/api/group-orders/${orderId}/confirm`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ deliveryDate }),
+      });
 
-  const handleFulfillOrder = (orderId) => {
-    const updatedOrders = vendorGroupOrders.map(order => 
-      order.id === orderId ? { ...order, status: 'fulfilled' } : order
-    );
-    setGroupOrders(updatedOrders);
-    localStorage.setItem('groupOrders', JSON.stringify(updatedOrders));
+      if (response.ok) {
+        fetchData(); // Refresh data
+        alert('Group order confirmed successfully!');
+      } else {
+        const error = await response.json();
+        alert('Error: ' + error.error);
+      }
+    } catch (error) {
+      console.error('Error confirming order:', error);
+      alert('Error confirming order');
+    }
   };
 
   if (status === 'loading') {
