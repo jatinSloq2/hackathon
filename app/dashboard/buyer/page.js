@@ -80,34 +80,64 @@ export default function BuyerDashboard() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const newListing = {
-      id: Date.now(),
-      ...formData,
-      pricePerKg: parseFloat(formData.pricePerKg),
-      availableQuantity: parseFloat(formData.availableQuantity),
-      createdAt: new Date().toISOString()
-    };
 
-    const updatedListings = [...listings, newListing];
-    setListings(updatedListings);
-    localStorage.setItem('buyerListings', JSON.stringify(updatedListings));
-    
-    setFormData({
-      material: '',
-      pricePerKg: '',
-      availableQuantity: '',
-      deliveryArea: ''
-    });
-    setShowAddForm(false);
+    try {
+      const response = await fetch('/api/materials', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          pricePerKg: parseFloat(formData.pricePerKg),
+          availableQuantity: parseFloat(formData.availableQuantity),
+          minOrderQuantity: parseFloat(formData.minOrderQuantity || 1),
+          deliveryRadius: parseFloat(formData.deliveryRadius || 50),
+        }),
+      });
+
+      if (response.ok) {
+        setFormData({
+          name: '',
+          description: '',
+          category: 'food',
+          pricePerKg: '',
+          availableQuantity: '',
+          minOrderQuantity: '',
+          unit: 'kg',
+          deliveryArea: '',
+          deliveryRadius: '50'
+        });
+        setShowAddForm(false);
+        fetchData(); // Refresh data
+      } else {
+        const error = await response.json();
+        alert('Error: ' + error.error);
+      }
+    } catch (error) {
+      console.error('Error creating material:', error);
+      alert('Error creating material listing');
+    }
   };
 
-  const handleDeleteListing = (id) => {
-    const updatedListings = listings.filter(listing => listing.id !== id);
-    setListings(updatedListings);
-    localStorage.setItem('buyerListings', JSON.stringify(updatedListings));
+  const handleDeleteListing = async (id) => {
+    try {
+      const response = await fetch(`/api/materials/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        fetchData(); // Refresh data
+      } else {
+        const error = await response.json();
+        alert('Error: ' + error.error);
+      }
+    } catch (error) {
+      console.error('Error deleting material:', error);
+      alert('Error deleting material');
+    }
   };
 
   const handleAcceptOrder = (orderId) => {
