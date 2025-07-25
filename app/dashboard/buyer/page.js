@@ -29,28 +29,51 @@ export default function BuyerDashboard() {
 
   useEffect(() => {
     if (status === 'loading') return;
-    
+
     if (!session) {
       router.push('/auth/login');
       return;
     }
-    
+
     if (session.user.role !== 'buyer') {
       router.push('/dashboard/vendor');
       return;
     }
 
-    // Load listings from localStorage (in a real app, this would be from the database)
-    const savedListings = localStorage.getItem('buyerListings');
-    if (savedListings) {
-      setListings(JSON.parse(savedListings));
-    }
-
-    const savedGroupOrders = localStorage.getItem('groupOrders');
-    if (savedGroupOrders) {
-      setGroupOrders(JSON.parse(savedGroupOrders));
-    }
+    fetchData();
   }, [session, status, router]);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch my materials
+      const materialsRes = await fetch('/api/materials');
+      if (materialsRes.ok) {
+        const materialsData = await materialsRes.json();
+        // Filter to show only materials from this supplier
+        const myMaterials = materialsData.materials.filter(
+          m => m.supplier._id === session.user.id
+        );
+        setMaterials(myMaterials);
+      }
+
+      // Fetch group orders for my materials
+      const groupOrdersRes = await fetch('/api/group-orders');
+      if (groupOrdersRes.ok) {
+        const groupOrdersData = await groupOrdersRes.json();
+        // Filter group orders that are for my materials
+        const myGroupOrders = groupOrdersData.groupOrders.filter(order =>
+          materials.some(material => material._id === order.material._id)
+        );
+        setGroupOrders(myGroupOrders);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
