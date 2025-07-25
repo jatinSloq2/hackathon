@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import { LogOut, User, Home } from 'lucide-react';
+import { LogOut, User, Home, Package, Database } from 'lucide-react';
 
 export function Navbar() {
   const { data: session } = useSession();
